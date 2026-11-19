@@ -1,0 +1,8 @@
+{
+  "name": "Remix 코(스프레 고)민 상담소",
+  "description": "코스프레 고민을 나누는 코(스프레 고)민 상담소 웹페이지",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

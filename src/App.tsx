@@ -61,8 +61,66 @@ const COSPLAY_CATEGORIES = [
   },
 ] as const;
 
+const WORRY_GUIDES = [
+  {
+    id: 'budget',
+    label: '비용이 부담돼요',
+    method: '옷장 속 일상복 활용 코디',
+    advice:
+      '비싼 전문 의상을 새로 구매하지 않아도 됩니다. 캐릭터의 대표 색상이나 셔츠·니트·코트 같은 기본 복장만 맞추어도 충분히 분위기를 낼 수 있습니다.',
+    example: '흰 셔츠와 넥타이 조합, 교복·사복 스타일 캐릭터부터 시작하기',
+  },
+  {
+    id: 'gaze',
+    label: '시선이 신경 쓰여요',
+    method: '친구와 함께하는 테마 공간 도전',
+    advice:
+      '혼자 시작하는 것이 어색하다면 친구와 콘셉트를 맞추거나 테마파크·졸업사진·할로윈처럼 모두가 즐기는 자리에서 가볍게 경험해 보세요.',
+    example: '친구들과 작품 속 인물 나누어 맡기, 놀이공원·축제 콘셉트 맞추기',
+  },
+  {
+    id: 'makeup',
+    label: '분장·메이크업이 어려워요',
+    method: '포인트 소품 1~2가지 집중하기',
+    advice:
+      '화려한 분장이 필수는 아닙니다. 안경, 리본, 모자, 머플러, 가방처럼 캐릭터를 떠올리게 하는 상징적인 소품 한두 가지만 더해도 완성도가 살아납니다.',
+    example: '특징적인 안경·머리핀·모자·헤드폰 등 일상 소품으로 포인트 주기',
+  },
+  {
+    id: 'choice',
+    label: '캐릭터 고르기가 막막해요',
+    method: '나와 닮은 캐릭터부터 매칭하기',
+    advice:
+      '처음부터 전혀 다른 이미지에 도전하기보다 평소 머리 길이, 체형, 자주 입는 옷이나 성격이 비슷한 캐릭터를 고르면 자연스럽게 몰입할 수 있습니다.',
+    example: '평소 스타일과 겹치는 일상물 캐릭터, 좋아하는 작품 속 최애 인물',
+  },
+] as const;
+
+const BEGINNER_FAQS = [
+  {
+    question: 'Q1. 의상이 완벽하게 똑같아야 할까요?',
+    answer:
+      '색감이나 실루엣, 작은 소품 하나만으로도 캐릭터의 분위기는 충분히 전달됩니다.',
+  },
+  {
+    question: 'Q2. 연기를 꼭 잘해야 하나요?',
+    answer:
+      '거창한 연기보다 사진을 찍을 때의 포즈 하나, 소품 활용만으로도 즐거움을 느낄 수 있습니다.',
+  },
+  {
+    question: 'Q3. 혼자 시작해도 괜찮을까요?',
+    answer:
+      '혼자 가볍게 소품부터 시도하거나, 친구와 콘셉트를 나누면 훨씬 든든하게 시작할 수 있습니다.',
+  },
+] as const;
+
 export default function App() {
   const [imageError, setImageError] = useState(false);
+  const [selectedWorryId, setSelectedWorryId] =
+    useState<(typeof WORRY_GUIDES)[number]['id']>('budget');
+
+  const activeWorry =
+    WORRY_GUIDES.find((item) => item.id === selectedWorryId) ?? WORRY_GUIDES[0];
 
   return (
     <div className="relative w-full min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#aec8fa_0%,#c7ddfe_38%,#d5e6ff_72%,#e4efff_100%)]">
@@ -126,7 +184,7 @@ export default function App() {
       {/* Main Content Area Inside the Light-Blue Sky Frame */}
       <main
         aria-label="상담소 본문 영역"
-        className="relative z-10 mx-auto w-full max-w-5xl px-7 sm:px-12 pt-[56vw] pb-[30vw]"
+        className="relative z-10 mx-auto w-full max-w-5xl px-7 sm:px-12 pt-[56vw] pb-[18vw]"
       >
         {/* Lead Headline */}
         <section className="text-center mb-10 sm:mb-14">
@@ -328,10 +386,102 @@ export default function App() {
             </div>
           </section>
 
-          {/* Section 9: Our Closing Message */}
+          {/* Section 9: Interactive Consultation by Worry */}
+          <section className="rounded-2xl bg-white/80 backdrop-blur-md border border-white/95 p-6 sm:p-9 shadow-[0_10px_30px_rgba(43,82,163,0.08)]">
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="text-xs font-bold tabular-nums text-[#d45081]">
+                09 · 맞춤 상담 코너
+              </p>
+              <h3 className="mt-1.5 text-xl sm:text-2xl font-bold text-[#182b5c] text-balance">
+                고민별 코스프레 시작 처방전
+              </h3>
+              <p className="mt-2 text-[14.5px] sm:text-[15.5px] leading-[1.75] text-[#283d70]">
+                가장 망설여지는 이유를 선택하면 부담 없이 시작할 수 있는 방법을
+                추천해 드립니다.
+              </p>
+            </div>
+
+            <div
+              role="tablist"
+              aria-label="코스프레 고민 유형 선택"
+              className="mt-6 flex flex-wrap justify-center gap-2.5"
+            >
+              {WORRY_GUIDES.map((worry) => {
+                const isSelected = worry.id === activeWorry.id;
+                return (
+                  <button
+                    key={worry.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    onClick={() => setSelectedWorryId(worry.id)}
+                    className={`min-h-[44px] px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3b7d] cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#1f3b7d] text-white shadow-[0_4px_14px_rgba(31,59,125,0.22)]'
+                        : 'bg-[#edf3ff] text-[#263d73] hover:bg-[#dfeaff]'
+                    }`}
+                  >
+                    {worry.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div
+              role="tabpanel"
+              className="mt-6 pt-6 border-t border-[#96b8f5]/45 grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-8 items-start"
+            >
+              <div className="md:col-span-5">
+                <p className="text-xs font-semibold text-[#d45081]">
+                  추천 시작 방식
+                </p>
+                <h4 className="mt-1 text-lg sm:text-xl font-bold text-[#182b5c] text-balance">
+                  {activeWorry.method}
+                </h4>
+                <p className="mt-3 text-sm font-medium text-[#2f549e]">
+                  활용 예시 · {activeWorry.example}
+                </p>
+              </div>
+              <div className="md:col-span-7">
+                <p className="text-[15px] sm:text-base leading-[1.85] text-[#283d70]">
+                  {activeWorry.advice}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 10: Beginner Q&A */}
+          <section className="rounded-2xl bg-white/75 backdrop-blur-md border border-white/90 p-6 sm:p-9 shadow-[0_10px_30px_rgba(43,82,163,0.08)]">
+            <div className="flex items-baseline gap-2.5">
+              <span className="text-xs font-bold tabular-nums text-[#d45081]">
+                10
+              </span>
+              <h3 className="text-lg sm:text-xl font-bold text-[#182b5c] text-balance">
+                첫 도전 전, 자주 묻는 질문
+              </h3>
+            </div>
+
+            <dl className="mt-5 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#96b8f5]/45 border-t border-[#96b8f5]/45">
+              {BEGINNER_FAQS.map((faq) => (
+                <div
+                  key={faq.question}
+                  className="py-5 md:pt-6 md:pb-1 md:px-6 first:md:pl-1 last:md:pr-1"
+                >
+                  <dt className="text-[15px] sm:text-base font-bold text-[#182b5c]">
+                    {faq.question}
+                  </dt>
+                  <dd className="mt-2 text-[14.5px] leading-[1.75] text-[#2c4378]">
+                    {faq.answer}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          {/* Section 11: Our Closing Message */}
           <section className="rounded-2xl bg-white/85 backdrop-blur-md border border-white/95 p-7 sm:p-9 shadow-[0_10px_30px_rgba(43,82,163,0.08)] text-center">
             <div className="max-w-2xl mx-auto">
-              <p className="text-xs font-bold tabular-nums text-[#d45081]">09</p>
+              <p className="text-xs font-bold tabular-nums text-[#d45081]">11</p>
               <h3 className="mt-1 text-xl sm:text-2xl font-bold text-[#182b5c] text-balance">
                 우리가 전하고 싶은 이야기
               </h3>
